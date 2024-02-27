@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language }}">
+
+<head>
+	<title>{{ if not .IsHome }}{{ .Title | title }} | {{ end }}{{ .Site.Title }}</title>
+	<link rel="canonical" href="{{ .Site.BaseURL }}">
+	<link rel='alternate' type='application/rss+xml' title="{{ .Site.Title }} RSS" href='/index.xml'>
+	<link rel='stylesheet' type='text/css' href='/style.css'>
+	{{ with .Site.Params.favicon }}
+	<link rel="icon" href="{{ . }}">
+	{{ end -}}
+	<meta name="description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}">
+	{{ if isset .Params "tags" }}
+	<meta name="keywords" content="{{ with .Params.tags }}{{ delimit . " , " }}{{ end }}">
+	{{ end -}}
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="index, follow">
+	<meta charset="utf-8">
+</head>
+<style>
+	.image-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		/* Adjust the gap between images */
+		justify-content: center;
+		/* Center images horizontally */
+	}
+
+	.image-container {
+		flex: 1 1 200px;
+		/* Adjust the image container size */
+		cursor: pointer;
+		transition: transform 0.3s;
+		margin: 8px;
+		/* Adjust the margin between images */
+	}
+
+	.image-container:hover {
+		transform: scale(1.1);
+	}
+
+	img {
+		width: 100%;
+		height: auto;
+		max-width: 100%;
+		/* Ensure images don't exceed their container width */
+	}
+
+	/* Responsive styles for smaller screens */
+	@media screen and (max-width: 768px) {
+		.image-container {
+			flex-basis: calc(33.33% - 16px);
+			/* Three images per row with margin */
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		.image-container {
+			flex-basis: calc(50% - 16px);
+			/* Two images per row with margin */
+		}
+	}
+</style>
+<script>
+	function zoomImage(imageUrl) {
+		window.location.href = imageUrl;
+	}
+</script>
+
+<body>
+	{{ if .Site.Menus.main }}{{ partial "nav.html" . }}{{ end -}}
+	<main>
+		<header>
+			<h1 id="tag_{{ .Title }}">{{ block "title" . }}{{ end }}</h1>
+		</header>
+		<article>
+			{{ block "main" . }}
+			{{ .Content }}
+			{{ end }}
+			{{ if .Param "nextprev" }}{{ partial "nextprev.html" . -}}{{ end -}}
+			{{ if .Param "taglist" }}{{ partial "taglist.html" . }}{{ end -}}
+		</article>
+	</main>
+
+
+	<script>
+		var imagesData = [
+			{{ range readDir "static/images" }}
+		"{{ .Name }}",
+			{{ end }}
+    ];
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var imageGrid = document.querySelector('.image-grid');
+
+			imagesData.forEach(function (imageName) {
+				var imageContainer = document.createElement('div');
+				imageContainer.classList.add('image-container');
+
+				var img = document.createElement('img');
+				img.src = '/' + imageName; // Adjust the path based on your folder structure
+				img.alt = imageName;
+
+				imageContainer.appendChild(img);
+				imageGrid.appendChild(imageContainer);
+			});
+		});
+	</script>
+	<section class="image-grid">
+		{{ range readDir "static" }}
+		{{ if and (or (strings.HasSuffix .Name ".jpg") (strings.HasSuffix .Name ".png")) (not .IsDir) }}
+		<div class="image-container" onclick="zoomImage('{{ .RelPermalink }}')">
+			<img src="{{ .RelPermalink }}" alt="{{ .Name }}">
+		</div>
+		{{ end }}
+		{{ end }}
+	</section>
+
+
+
+	{{ block "footer" . }}
+
+	{{ end }}
+</body>
+
+</html>
