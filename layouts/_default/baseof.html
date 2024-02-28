@@ -22,18 +22,18 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 16px;
-		/* Adjust the gap between images */
+
 		justify-content: center;
-		/* Center images horizontally */
+
 	}
 
 	.image-container {
 		flex: 1 1 200px;
-		/* Adjust the image container size */
+
 		cursor: pointer;
 		transition: transform 0.3s;
 		margin: 8px;
-		/* Adjust the margin between images */
+
 	}
 
 	.image-container:hover {
@@ -44,21 +44,21 @@
 		width: 100%;
 		height: auto;
 		max-width: 100%;
-		/* Ensure images don't exceed their container width */
+
 	}
 
-	/* Responsive styles for smaller screens */
+
 	@media screen and (max-width: 768px) {
 		.image-container {
 			flex-basis: calc(33.33% - 16px);
-			/* Three images per row with margin */
+
 		}
 	}
 
 	@media screen and (max-width: 480px) {
 		.image-container {
 			flex-basis: calc(50% - 16px);
-			/* Two images per row with margin */
+
 		}
 	}
 </style>
@@ -99,7 +99,7 @@
 				imageContainer.classList.add('image-container');
 
 				var img = document.createElement('img');
-				img.src = '/' + imageName; // Adjust the path based on your folder structure
+				img.src = '/images/' + imageName;
 				img.alt = imageName;
 
 				imageContainer.appendChild(img);
