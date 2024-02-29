@@ -57,9 +57,9 @@ jobs:
           HUGO_ENV: production
         run: |
           hugo \
+            --noHTTPCache \
             --gc \
             --minify \
-            --noHTTPCache \
             --baseURL "${{ steps.pages.outputs.base_url }}/"          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
